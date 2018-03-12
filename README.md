@@ -5,6 +5,7 @@ calc supports:
 - one level of braces `(...)`
 
 <br>
+
 **Usage**
 
 Enter expressions separated by `;` (new line and whitespaces are ignored)
