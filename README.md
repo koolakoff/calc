@@ -5,7 +5,7 @@ calc supports:
 - one level of braces `(...)`
 
 <br>
-**Usage:**
+**Usage**
 
 Enter expressions separated by `;` (new line and whitespaces are ignored)
 after each `;` calc calculates the expression value.
