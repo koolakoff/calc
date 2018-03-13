@@ -3,6 +3,7 @@
 calc supports:
 - simple math operations like `+`, `-`, `*`, `/`, `%`
 - one level of braces `(...)`
+- variables using `let a = expression`
 
 <br>
 
