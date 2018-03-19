@@ -33,9 +33,20 @@ public:
     double value;
 };
 
+class Vartable
+{
+public:
+    double get_value(string s);
+    double define_name (string var, double val);
+private:
+    void set_value(string s, double val); // private at the moment because we use define_name for redefinition
+    bool is_declared (string var);
+    vector<Variable> var_table;
+};
+
 /* ----------------- Global variables ----------------- */
 Token_stream ts;
-vector<Variable> var_table;
+Vartable vars;
 
 /* -----------------  Constants ----------------- */
 const char quit = 'q';
@@ -113,19 +124,17 @@ void Token_stream::ignore (char c)
         if (ch==c) return;
 }
 
-/* ----------------- Functions ----------------- */
-double expression();
-
-//    get_value
-double get_value(string s)
+//////////////////  Vartable
+//    Vartable::get_value
+double Vartable::get_value(string s)
 {
     for (const Variable& v: var_table)
         if (v.name == s) return v.value;
     error("get: unknown variable ", s);
 }
 
-//    set_value
-void set_value(string s, double val)
+//    Vartable::set_value
+void Vartable::set_value(string s, double val)
 {
     for (Variable& v: var_table)
         if (v.name == s)
@@ -136,22 +145,25 @@ void set_value(string s, double val)
     error("set: unknown variable ", s);
 }
 
-//    is_declared
-bool is_declared (string var)
+//    Vartable::is_declared
+bool Vartable::is_declared (string var)
 {
     for (const Variable& v: var_table)
         if (v.name == var) return true;
     return false;
 }
 
-//   define_name
-double define_name (string var, double val)
+//   Vartable::define_name
+double Vartable::define_name (string var, double val)
 {
     // overwrite value if variable exists
     if (is_declared(var)) set_value (var, val);
     var_table.push_back(Variable{var,val});
     return val;
 }
+
+/* ----------------- Functions ----------------- */
+double expression();
 
 //   primary
 double primary()
@@ -176,7 +188,7 @@ double primary()
         case '+':
             return primary();
         case name:
-            return get_value(t.name);
+            return vars.get_value(t.name);
         default:
             error ("Missing initial expression, t=" + string{t.kind});
     }
@@ -262,7 +274,7 @@ double declaration()
         error ("expected '='");
 
     double d = expression();
-    define_name (var_name, d);
+    vars.define_name (var_name, d);
     return d;
 }
 
@@ -311,6 +323,8 @@ int main()
     cout << "Enter '" << quit << "' to exit\n";
     try
     {
+        vars.define_name ("pi", 3.1415926535);
+        vars.define_name ("e", 2.7182818284);
         calculate();
     }
     catch (exception& e)
